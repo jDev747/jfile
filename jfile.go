@@ -83,11 +83,8 @@ func WriteJson(path string, obj any) {
 	os.WriteFile(path, bytes, 0777)
 }
 func main() {
-	WriteJson("main.json", *dirToJdir("test"))
-	obj := readJson("main.json")
-	JdirTodir(obj, "EXPORT")
+	// we dont need anythign here anymore, its released!
 }
 
 
-// i need to completely rewrite this!!!!!!!!
-// i just did ;)
+// have fun with the module yall
