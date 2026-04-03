@@ -8,14 +8,13 @@ import (
 )
 
 type JItem struct {
-	Name  string
+	Name    string
 	Content []byte
-	Files []JItem
+	Files   []JItem
 }
 
-
 func IsJdir(item JItem) bool {
-    return len(item.Files) > 0
+	return len(item.Files) > 0
 }
 func FileToJfile(path string) *JItem {
 	filename := filepath.Base(path)
@@ -56,13 +55,13 @@ func JdirTodir(jdir JItem, exportPath string) {
 	fullpath := filepath.Join(exportPath, jdir.Name)
 	os.MkdirAll(fullpath, 0777)
 	for _, item := range jdir.Files {
-		if IsJdir(item){
+		if IsJdir(item) {
 			JdirTodir(item, fullpath)
 		} else {
 			JFileToFile(item, fullpath)
-			}
 		}
 	}
+}
 func ReadJson(path string) JItem {
 	bytes, err := os.ReadFile(path)
 	if err != nil {
@@ -82,6 +81,5 @@ func WriteJson(path string, obj any) {
 	}
 	os.WriteFile(path, bytes, 0777)
 }
-
 
 // have fun with the module yall
