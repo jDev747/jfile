@@ -1,5 +1,5 @@
 test/*
 EXPORT/*
-main.json
-main.exe
-jfile.old
+./main.json
+./main.exe
+./jfile.old
