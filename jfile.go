@@ -7,68 +7,68 @@ import (
 	"path/filepath"
 )
 
-type jItem struct {
+type JItem struct {
 	Name  string
 	Content []byte
-	Files []jItem
+	Files []JItem
 }
 
 
-func isJdir(item jItem) bool {
+func IsJdir(item JItem) bool {
     return len(item.Files) > 0
 }
-func fileToJfile(path string) *jItem {
+func FileToJfile(path string) *JItem {
 	filename := filepath.Base(path)
 	bytes, err := os.ReadFile(path)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return &jItem{Name: filename, Content: bytes}
+	return &JItem{Name: filename, Content: bytes}
 }
-func jFileToFile(jfile jItem, exportPath string) {
-	if isJdir(jfile) {
+func JFileToFile(jfile JItem, exportPath string) {
+	if IsJdir(jfile) {
 		log.Fatal("<FROM JFILE> ERROR: passed jdir to a jfile function (jfiletofile)")
 	}
 	fullpath := filepath.Join(exportPath, jfile.Name)
 	os.WriteFile(fullpath, jfile.Content, 0777)
 }
-func dirToJdir(path string) *jItem {
+func DirToJdir(path string) *JItem {
 	dirpath := filepath.Base(path)
 	files, err := os.ReadDir(path)
 	if err != nil {
 		log.Fatal(err)
 	}
-	var jfiles []jItem
+	var jfiles []JItem
 	for _, file := range files {
 		fname := filepath.Join(path, file.Name())
 		if file.IsDir() {
-			jfiles = append(jfiles, *dirToJdir(fname))
+			jfiles = append(jfiles, *DirToJdir(fname))
 		} else {
-			jfiles = append(jfiles, *fileToJfile(fname))
+			jfiles = append(jfiles, *FileToJfile(fname))
 		}
 	}
-	return &jItem{Name: dirpath, Files: jfiles}
+	return &JItem{Name: dirpath, Files: jfiles}
 }
-func JdirTodir(jdir jItem, exportPath string) {
-	if !isJdir(jdir) {
+func JdirTodir(jdir JItem, exportPath string) {
+	if !IsJdir(jdir) {
 		log.Fatal("<FROM JFILE> ERROR: passed jfile to a jdir function (jdirtodir)")
 	}
 	fullpath := filepath.Join(exportPath, jdir.Name)
 	os.MkdirAll(fullpath, 0777)
 	for _, item := range jdir.Files {
-		if isJdir(item){
+		if IsJdir(item){
 			JdirTodir(item, fullpath)
 		} else {
-			jFileToFile(item, fullpath)
+			JFileToFile(item, fullpath)
 			}
 		}
 	}
-func readJson(path string) jItem {
+func ReadJson(path string) JItem {
 	bytes, err := os.ReadFile(path)
 	if err != nil {
 		log.Fatal(err)
 	}
-	obj := jItem{}
+	obj := JItem{}
 	err = json.Unmarshal(bytes, &obj)
 	if err != nil {
 		log.Fatal(err)
