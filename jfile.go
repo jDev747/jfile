@@ -1,4 +1,4 @@
-package main
+package jfile
 
 import (
 	"encoding/json"
@@ -81,9 +81,6 @@ func WriteJson(path string, obj any) {
 		log.Fatal(err)
 	}
 	os.WriteFile(path, bytes, 0777)
-}
-func main() {
-	// we dont need anythign here anymore, its released!
 }
 
 
